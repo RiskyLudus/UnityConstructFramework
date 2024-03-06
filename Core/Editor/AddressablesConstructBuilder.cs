@@ -1,4 +1,5 @@
 using System.Linq;
+using UCF.Core.ScriptableObjects;
 using UnityEditor;
 using UnityEditor.AddressableAssets;
 using UnityEditor.AddressableAssets.Settings;
@@ -11,13 +12,13 @@ namespace UCF.Core.Editor
         [MenuItem("UCF/Core/Build Constructs Addressables Group")]
         static void BuildConstructsGroup()
         {
-            string constructFolderPath = "Assets/UnityConstructFramework/_Constructs";
+            UCFSettings settings = UCFEditorFunctions.GetSettings();
 
             // Create a new Addressables group named "Constructs"
             CreateAddressablesGroup("Constructs");
 
             // Get all assets within the construct folder
-            string[] constructAssets = AssetDatabase.FindAssets("", new[] { constructFolderPath });
+            string[] constructAssets = AssetDatabase.FindAssets("", new[] { settings.PathToConstructs });
 
             // Filter out empty folders
             constructAssets = FilterEmptyFolders(constructAssets);
