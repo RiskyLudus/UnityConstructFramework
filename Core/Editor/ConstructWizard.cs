@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UCF.Core.ScriptableObjects;
 
 namespace UCF.Core.Editor
 {
@@ -8,13 +9,16 @@ namespace UCF.Core.Editor
     {
         private string constructName;
 
+        // Define a menu item to invoke this window
         [MenuItem("UCF/Core/Create Construct")]
         static void Init()
         {
+            // Create an instance of ConstructWizard and show it
             ConstructWizard window = (ConstructWizard)EditorWindow.GetWindow(typeof(ConstructWizard));
             window.Show();
         }
 
+        // GUI content of the window
         void OnGUI()
         {
             GUILayout.Label("Create Construct", EditorStyles.boldLabel);
@@ -26,11 +30,15 @@ namespace UCF.Core.Editor
 
             GUILayout.Space(10);
 
+            // Button to create the construct
             if (GUILayout.Button("Create"))
             {
+                // Check if the construct name is not empty
                 if (!string.IsNullOrEmpty(constructName))
                 {
+                    // Create the construct folder structure
                     CreateConstructFolderStructure();
+                    // Close the window
                     Close();
                 }
                 else
@@ -40,16 +48,29 @@ namespace UCF.Core.Editor
             }
         }
 
+        // Method to create the folder structure for the construct
         private void CreateConstructFolderStructure()
         {
-            string constructsPath = "Assets/UnityConstructFramework/_Constructs";
-            string constructFolderPath = Path.Combine(constructsPath, constructName);
+            UCFSettings settings = UCFEditorFunctions.GetSettings();
 
-            // Create the main construct folder
+            // Construct the path using UCFSettings properties
+            string constructFolderPath = Path.Combine(settings.PathToConstructs, constructName);
+
+            // Create the main construct folder if it doesn't exist
             if (!AssetDatabase.IsValidFolder(constructFolderPath))
             {
-                AssetDatabase.CreateFolder(constructsPath, constructName);
+                try
+                {
+                    AssetDatabase.CreateFolder(settings.PathToConstructs, constructName);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("Error creating folder: " + ex.Message);
+                }
             }
+
+            // Refresh the AssetDatabase to reflect changes
+            AssetDatabase.Refresh();
 
             // Create subfolders
             CreateSubfolder(constructFolderPath, "Code");
@@ -64,33 +85,44 @@ namespace UCF.Core.Editor
             CreateSubfolder(constructFolderPath, "Tests");
 
             // Create Assembly Definition file
-            CreateAssemblyDefinitionFile(constructFolderPath);
+            CreateAssemblyDefinitionFile(constructFolderPath, settings.RootNamespace);
 
             // Refresh the AssetDatabase to reflect changes
             AssetDatabase.Refresh();
         }
 
+        // Method to create a subfolder inside a parent folder
         private void CreateSubfolder(string parentFolder, string folderName)
         {
             string subfolderPath = Path.Combine(parentFolder, folderName);
             if (!AssetDatabase.IsValidFolder(subfolderPath))
             {
-                AssetDatabase.CreateFolder(parentFolder, folderName);
+                try
+                {
+                    AssetDatabase.CreateFolder(parentFolder, folderName);
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogError("Error creating folder: " + ex.Message);
+                }
             }
         }
 
-        private void CreateAssemblyDefinitionFile(string folderPath)
+        // Method to create the Assembly Definition file for the construct
+        private void CreateAssemblyDefinitionFile(string folderPath, string rootNamespace)
         {
             string asmdefFileName = $"{constructName}.asmdef";
             string asmdefFilePath = Path.Combine(folderPath, asmdefFileName);
 
+            // Check if the Assembly Definition file doesn't already exist
             if (!File.Exists(asmdefFilePath))
             {
+                // Create the Assembly Definition file and write its content
                 using (StreamWriter writer = new StreamWriter(asmdefFilePath))
                 {
                     writer.WriteLine("{");
                     writer.WriteLine("  \"name\": \"" + constructName + "\",");
-                    writer.WriteLine("  \"rootNamespace\": \"TheSkywatchers.Constructs." + constructName + "\",");
+                    writer.WriteLine("  \"rootNamespace\": \""+ rootNamespace + "Constructs." + constructName + "\",");
                     writer.WriteLine("  \"references\": [],");
                     writer.WriteLine("  \"includePlatforms\": [],");
                     writer.WriteLine("  \"excludePlatforms\": [],");
