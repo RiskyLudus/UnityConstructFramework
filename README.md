@@ -8,6 +8,27 @@ Constructs are best thought of as a noun inside of a world. I mean like a person
 
 Constructs are made via prefabs that are worked on within scenes. Each construct is worked on in its own scene and loaded dynamically at runtime with addressables. This also works when it comes to multiple people working on a single construct. Every person works on their prefab within the construct, making it easily manageable and extendable.
 
+## Using UCFBehaviour vs MonoBehaviour:
+
+UCFBehaviour is a base class in the UCF.Core.Common namespace designed to enhance Unity behaviors by providing a clean and modular event handling mechanism. It extends the MonoBehaviour class and introduces methods for setting up event links using the EventLink struct. The class maintains a list of event listeners for proper cleanup during enabling and disabling of the object. To use UCFBehaviour, inherit from this class and leverage its event link methods (SetLink, SetLinks). This ensures a structured approach to associating Unity events with corresponding actions, promoting code readability and maintainability. Example usage is demonstrated as follows:
+
+```cs
+public class ExampleUsage : NomadBehaviour
+{
+    private void Start()
+    {
+        // Set up an EventLink for a non-generic event
+        EventLink eventLink = new EventLink();
+        SetLink(eventLink);
+
+        // Set up multiple EventLinks for a generic event
+        EventLink<int> eventLinkInt = new EventLink<int>();
+        EventLink<string> eventLinkString = new EventLink<string>();
+        SetLinks(eventLinkInt, eventLinkString);
+    }
+}
+```
+
 ## Addressable Loading with ConstructLoader
 
 The ConstructLoader class offers a set of static methods for the asynchronous loading and unloading of prefabs and scenes using Unity's Addressable Assets system. This utility enhances resource management by providing a convenient and efficient way to handle assets in Unity projects.
