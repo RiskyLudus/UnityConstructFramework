@@ -3,7 +3,20 @@ using UnityEngine.Events;
 
 namespace UCF.Core.Data
 {
-    // EventLink struct with 3 generics (probably should be our limit lol)
+    // EventLink struct with 4 generics (probably should be our limit lol)
+    public struct EventLink<T1, T2, T3, T4>
+    {
+        public UnityEvent<T1, T2, T3, T4> UnityEvent;
+        public Action<T1, T2, T3, T4> Action;
+
+        public EventLink(UnityEvent<T1, T2, T3, T4> unityEvent, Action<T1, T2, T3, T4> action)
+        {
+            UnityEvent = unityEvent;
+            Action = action;
+        }
+    }
+
+    // EventLink struct with 3 generics
     public struct EventLink<T1, T2, T3>
     {
         public UnityEvent<T1, T2, T3> UnityEvent;
