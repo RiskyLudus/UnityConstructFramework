@@ -2,7 +2,8 @@
     "name": "UCF.Core.Editor",
     "rootNamespace": "UCF.Core.Editor",
     "references": [
-        "GUID:69448af7b92c7f342b298e06a37122aa"
+        "GUID:69448af7b92c7f342b298e06a37122aa",
+        "GUID:d6eaace4ed553ec45b625d9f6287019e"
     ],
     "includePlatforms": [
         "Editor"
