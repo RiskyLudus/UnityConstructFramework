@@ -1,5 +1,5 @@
 {
-  "name": "UnityConstructFramework",
+  "name": "com.risky.unity-construct-framework",
   "version": "1.0.0",
   "displayName": "Unity Construct Framework",
   "description": "A modular gameplay architecture centered around message bus and modular gameplay ideas.",
