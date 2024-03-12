@@ -122,7 +122,7 @@ namespace UCF.Core.Editor
                 {
                     writer.WriteLine("{");
                     writer.WriteLine("  \"name\": \"" + constructName + "\",");
-                    writer.WriteLine("  \"rootNamespace\": \""+ rootNamespace + "Constructs." + constructName + "\",");
+                    writer.WriteLine("  \"rootNamespace\": \""+ rootNamespace + ".Constructs." + constructName + "\",");
                     writer.WriteLine("  \"references\": [],");
                     writer.WriteLine("  \"includePlatforms\": [],");
                     writer.WriteLine("  \"excludePlatforms\": [],");
